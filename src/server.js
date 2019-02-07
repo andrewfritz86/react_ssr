@@ -6,8 +6,9 @@ import { Provider as ReduxProvider } from "react-redux";
 
 import React from "react";
 import { renderToString } from "react-dom/server";
-import {StaticRouter} from "react-router-dom";
+import {StaticRouter, matchPath} from "react-router-dom";
 import Layout from "./components/Layout";
+import routes from "./routes";
 import createStore, { initializeSession } from "./store";
 
 const app = express();
@@ -21,23 +22,33 @@ app.get( "/*", ( req, res ) => {
     // dispatch initializeSession action to set up the store
     // default state=true
     store.dispatch( initializeSession() )
-    const jsx = ( 
-        <ReduxProvider store={ store }>
-            <StaticRouter context={context} location={req.url}>
-                <Layout />
-            </StaticRouter>
-        </ReduxProvider>
-    );
-    // render component to string
-    const reactDom = renderToString( jsx );
-    // grab current redux state as JSON object
-    const reduxState = store.getState();
-    console.log(reduxState, "redux state")
+    
+    const dataRequirements =
+        routes
+            .filter(route => matchPath(req.url, route))
+            .map(route => route.component)
+            .filter(comp => comp.serverFetch)
+            .map( comp => store.dispatch( comp.serverFetch()))
+           
 
-    res.writeHead( 200, { "Content-Type": "text/html" } );
-    // write templtated string to response
-    // pass in redux JSON object to be stringified in template
-    res.end( htmlTemplate( reactDom, reduxState ) );
+    Promise.all(dataRequirements).then(() => {
+        const jsx = ( 
+            <ReduxProvider store={ store }>
+                <StaticRouter context={context} location={req.url}>
+                    <Layout />
+                </StaticRouter>
+            </ReduxProvider>
+        );
+        const reactDom = renderToString( jsx );
+        // grab current redux state as JSON object
+        const reduxState = store.getState();
+    
+        res.writeHead( 200, { "Content-Type": "text/html" } );
+        // write templtated string to response
+        // pass in redux JSON object to be stringified in template
+        res.end( htmlTemplate( reactDom, reduxState ) );
+    })
+    // render component to string
 } );
 
 app.listen( 2048 );
