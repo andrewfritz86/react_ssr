@@ -13,9 +13,6 @@ const storeData = (data) => ({
     data,
 })
 
-// fetch data action, takes dispatch?
-// fetch the comments, then dispath a store data action (above)
-// Thunk middleware action ...not working on serve??
 export const fetchData = ( ) => ( dispatch ) =>
     fetchComments( ).then( res => dispatch( storeData( res ) ) );
 // reducer to catch actions, return new state

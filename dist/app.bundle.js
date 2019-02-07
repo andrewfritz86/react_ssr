@@ -32332,9 +32332,6 @@ var storeData = function storeData(data) {
     };
 };
 
-// fetch data action, takes dispatch?
-// fetch the comments, then dispath a store data action (above)
-// Thunk middleware action ...not working on serve??
 var fetchData = function fetchData() {
     return function (dispatch) {
         return Object(_api__WEBPACK_IMPORTED_MODULE_2__["fetchComments"])().then(function (res) {
