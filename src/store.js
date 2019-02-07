@@ -15,10 +15,22 @@ const sessionReducer = ( state = false, action ) => {
     }
 };
 
+const appStateReducer = ( state = {}, action) => {
+    console.log("demo reducer!", action)
+    switch (action.type) {
+        case "INITIALIZE_SESSION":
+            return {
+                appState: "initialized"
+            }
+        default: return state
+    }
+};
+
 
 // name space reducers
 const reducer = combineReducers( {
     loggedIn: sessionReducer,
+    appState: appStateReducer,
 } );
 
 export default ( initialState ) => createStore( reducer, initialState );

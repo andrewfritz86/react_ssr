@@ -31294,6 +31294,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 // window.REDUX_DATA is a serialized JSON object, we can create a redux store from it
+// we created an initial state of the app on the server, and stored it on the window
+// then create the client-side redux store FROM that initial snapshot
 var store = Object(_store__WEBPACK_IMPORTED_MODULE_5__["default"])(window.REDUX_DATA);
 
 // this is the file used as the entry point for webpack bundle
@@ -31311,6 +31313,41 @@ var jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(
 );
 var app = document.getElementById("app");
 react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.hydrate(jsx, app);
+
+/***/ }),
+
+/***/ "./components/AppState.js":
+/*!********************************!*\
+  !*** ./components/AppState.js ***!
+  \********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+
+var AppState = function AppState(_ref) {
+    var name = _ref.name;
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(
+        "div",
+        null,
+        react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(
+            "h2",
+            null,
+            "AppState is:"
+        ),
+        react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(
+            "p",
+            null,
+            name
+        )
+    );
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (AppState);
 
 /***/ }),
 
@@ -31456,12 +31493,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "../node_modules/react-router-dom/es/index.js");
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-redux */ "../node_modules/react-redux/es/index.js");
+/* harmony import */ var _AppState__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./AppState */ "./components/AppState.js");
 
 
 
+
+
+
+// this component is subscribed to the redux store directly by connect
+// works with mapStateToProps to spread parts of the redux store state as
+// props to the component
 
 var Header = function Header(_ref) {
-    var loggedIn = _ref.loggedIn;
+    var loggedIn = _ref.loggedIn,
+        appState = _ref.appState;
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(
         "div",
         null,
@@ -31484,13 +31529,19 @@ var Header = function Header(_ref) {
             react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"],
             { to: "/secret" },
             "Secret"
-        )
+        ),
+        react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_AppState__WEBPACK_IMPORTED_MODULE_3__["default"], { name: appState.appState })
     );
 };
 
 var mapStateToProps = function mapStateToProps(state) {
     return {
-        loggedIn: state.loggedIn
+        // From react-redux docs
+        // Called every time the store state changes. Receives the entire store state
+        // *returns and object of whatever data this component is concerned
+        // look in the reducer within the store to match up the name space
+        loggedIn: state.loggedIn,
+        appState: state.appState
     };
 };
 
@@ -31581,9 +31632,25 @@ var sessionReducer = function sessionReducer() {
     }
 };
 
+var appStateReducer = function appStateReducer() {
+    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    var action = arguments[1];
+
+    console.log("demo reducer!", action);
+    switch (action.type) {
+        case "INITIALIZE_SESSION":
+            return {
+                appState: "initialized"
+            };
+        default:
+            return state;
+    }
+};
+
 // name space reducers
 var reducer = Object(redux__WEBPACK_IMPORTED_MODULE_0__["combineReducers"])({
-    loggedIn: sessionReducer
+    loggedIn: sessionReducer,
+    appState: appStateReducer
 });
 
 /* harmony default export */ __webpack_exports__["default"] = (function (initialState) {

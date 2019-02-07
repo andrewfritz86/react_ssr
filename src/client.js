@@ -9,6 +9,8 @@ import Layout from "./components/Layout";
 import createStore from "./store";
 
 // window.REDUX_DATA is a serialized JSON object, we can create a redux store from it
+// we created an initial state of the app on the server, and stored it on the window
+// then create the client-side redux store FROM that initial snapshot
 const store = createStore( window.REDUX_DATA);
 
 // this is the file used as the entry point for webpack bundle

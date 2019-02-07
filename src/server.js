@@ -32,6 +32,7 @@ app.get( "/*", ( req, res ) => {
     const reactDom = renderToString( jsx );
     // grab current redux state as JSON object
     const reduxState = store.getState();
+    console.log(reduxState, "redux state")
 
     res.writeHead( 200, { "Content-Type": "text/html" } );
     // write templtated string to response
