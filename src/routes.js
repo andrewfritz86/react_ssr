@@ -1,28 +1,21 @@
 import Home from "./components/Home";
-import About from "./components/About";
-import Contact from "./components/Contact";
-import Secret from "./components/Secret";
-
+import Account from "./components/Account";
+import NearbyStores from "./components/NearbyStores";
 
 export default [
-    {
-        path: "/",
-        component: Home,
-        exact: true,
-    },
-    {
-        path: "/about",
-        component: About,
-        exact: true,
-    },
-    {
-        path: "/contact",
-        component: Contact,
-        exact: true,
-    },
-    {
-        path: "/secret",
-        component: Secret,
-        exact: true,
-    },
-]
+  {
+    path: "/",
+    component: Home,
+    exact: true
+  },
+  {
+    path: "/nearby-stores",
+    component: NearbyStores,
+    exact: true
+  },
+  {
+    path: "/account",
+    component: Account,
+    exact: true
+  }
+];

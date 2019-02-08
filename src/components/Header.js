@@ -10,13 +10,11 @@ import AppState from "./AppState";
 
 const Header = ({ loggedIn, appState, account, toggleLogin }) => (
   <div>
-    <Link to="/">Home</Link>
-    <Link to="/about">About</Link>
-    <Link to="/contact">Contact</Link>
-    {loggedIn && <Link to="/secret">Secret</Link>}
+    <Link to="/"> Home </Link>
+    <Link to="/nearby-stores"> Nearby Stores </Link>
+    {account && <Link to="/account"> Account </Link>}
     <AppState name={appState.appState} />
-    {account && <h3> ACCOUNT LOL</h3>}
-    <button onClick={toggleLogin}>Toggle Login </button>
+    <button onClick={toggleLogin} children={account ? "Log out" : "Log in"} />
   </div>
 );
 

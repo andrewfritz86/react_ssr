@@ -1,6 +1,6 @@
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import thunkMiddleware from "redux-thunk";
-import { fetchComments } from "./api";
+import { fetchStores } from "./api";
 
 // initialize session action
 export const initializeSession = () => ({
@@ -18,16 +18,7 @@ export const toggleLogin = () => ({
 });
 
 export const fetchData = () => dispatch =>
-  fetchComments().then(res => dispatch(storeData(res)));
-// reducer to catch actions, return new state
-const sessionReducer = (state = false, action) => {
-  switch (action.type) {
-    case "INITIALIZE_SESSION":
-      return true;
-    default:
-      return state;
-  }
-};
+  fetchStores().then(res => dispatch(storeData(res)));
 
 const appStateReducer = (state = {}, action) => {
   switch (action.type) {
@@ -40,7 +31,7 @@ const appStateReducer = (state = {}, action) => {
   }
 };
 
-const dataReducer = (state = [], action) => {
+const prefetchReducer = (state = [], action) => {
   switch (action.type) {
     case "STORE_DATA":
       return action.data;
@@ -58,11 +49,10 @@ const accountReducer = (state = false, action) => {
   }
 };
 
-// name space reducers
+// namespace reducers
 const reducer = combineReducers({
-  loggedIn: sessionReducer,
   appState: appStateReducer,
-  data: dataReducer,
+  prefetched: prefetchReducer,
   account: accountReducer
 });
 
